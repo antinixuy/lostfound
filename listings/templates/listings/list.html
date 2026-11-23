@@ -5,6 +5,17 @@
     <title>LostFound - Доска объявлений</title>
 </head>
 <body>
+    <!-- ЭТОТ БЛОК МЫ ДОБАВИЛИ -->
+    <div style="margin-bottom: 15px; padding: 10px; background: #f0f0f0;">
+        {% if user.is_authenticated %}
+            <span>Привет, <strong>{{ user.username }}</strong>!</span>
+            <a href="{% url 'logout' %}" style="margin-left: 10px; color: red;">Выйти</a>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a> | 
+            <a href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+    </div>
+
     <h1>Кампусная доска «Потерял/Нашёл»</h1>
     <p><a href="{% url 'add_listing' %}" style="padding: 10px; background: green; color: white; text-decoration: none; border-radius: 5px;">Добавить объявление</a></p>
     <hr>

@@ -2,35 +2,77 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LostFound - Доска объявлений</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+        .header a { color: #ecf0f1; text-decoration: none; margin-left: 10px; font-weight: bold; }
+        .header a:hover { text-decoration: underline; }
+        .btn-green { background-color: #2ecc71; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; margin-bottom: 20px; font-weight: bold; }
+        .btn-green:hover { background-color: #27ae60; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .card h2 { margin-top: 0; color: #2c3e50; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; margin-right: 5px; }
+        .badge-lost { background: #e74c3c; color: white; }
+        .badge-found { background: #3498db; color: white; }
+        .meta { font-size: 0.85em; color: #7f8c8d; margin-top: 10px; }
+        .admin-actions { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 0.9em; }
+        .admin-actions a { color: #3498db; text-decoration: none; margin-right: 10px; }
+        .admin-actions a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <!-- ЭТОТ БЛОК МЫ ДОБАВИЛИ -->
-    <div style="margin-bottom: 15px; padding: 10px; background: #f0f0f0;">
-        {% if user.is_authenticated %}
-            <span>Привет, <strong>{{ user.username }}</strong>!</span>
-            <a href="{% url 'logout' %}" style="margin-left: 10px; color: red;">Выйти</a>
-        {% else %}
-            <a href="{% url 'login' %}">Войти</a> | 
-            <a href="{% url 'register' %}">Регистрация</a>
-        {% endif %}
-    </div>
-
-    <h1>Кампусная доска «Потерял/Нашёл»</h1>
-    <p><a href="{% url 'add_listing' %}" style="padding: 10px; background: green; color: white; text-decoration: none; border-radius: 5px;">Добавить объявление</a></p>
-    <hr>
-    
-    {% for item in listings %}
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-            <h2>{{ item.title }}</h2>
-            <p><strong>Тип:</strong> {{ item.get_type_display }}</p>
-            <p><strong>Статус:</strong> {{ item.get_status_display }}</p>
-            <p>{{ item.description }}</p>
-            <p><small>Автор: {{ item.user.username }} | Дата: {{ item.created_at }}</small></p>
+    <div class="container">
+        <div class="header">
+            <h2>LostFound</h2>
+            <div>
+                {% if user.is_authenticated %}
+                    <span>Привет, <strong>{{ user.username }}</strong>!</span>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Войти</a>
+                    <a href="{% url 'register' %}">Регистрация</a>
+                {% endif %}
+            </div>
         </div>
-    {% empty %}
-        <p>Пока нет ни одного объявления. Добавьте их через <a href="/admin/">админку</a>!</p>
-    {% endfor %}
 
+        <h1>Кампусная доска «Потерял/Нашёл»</h1>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_listing' %}" class="btn-green">+ Добавить объявление</a>
+        {% endif %}
+
+        {% for item in listings %}
+            <div class="card">
+                <h2>{{ item.title }}</h2>
+                <div>
+                    {% if item.type == 'lost' %}
+                        <span class="badge badge-lost">Потерял</span>
+                    {% else %}
+                        <span class="badge badge-found">Нашёл</span>
+                    {% endif %}
+                    <span style="color: #7f8c8d;">Статус: {{ item.get_status_display }}</span>
+                </div>
+                <p>{{ item.description }}</p>
+                <div class="meta">
+                    Автор: {{ item.user.username }} | Дата: {{ item.created_at|date:"d.m.Y H:i" }}
+                </div>
+
+                {% if user == item.user or user.role == 'moderator' %}
+                    <div class="admin-actions">
+                        <a href="/admin/listings/listing/{{ item.id }}/change/">✏️ Редактировать</a>
+                        {% if user.role == 'moderator' %}
+                            <span style="color: #e74c3c; margin-left: 10px;">(Права модератора)</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #7f8c8d;">Пока нет ни одного объявления. Станьте первым!</p>
+        {% endfor %}
+    </div>
 </body>
 </html>

@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Добавить объявление</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
+        .form-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; }
+        form p { margin-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        button { background: #2ecc71; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 1em; cursor: pointer; width: 100%; font-weight: bold; }
+        button:hover { background: #27ae60; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #7f8c8d; text-decoration: none; }
+    </style>
 </head>
 <body>
-    <h1>Новое объявление</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="padding: 10px; background: blue; color: white;">Сохранить</button>
-        <a href="{% url 'listing_list' %}">Отмена</a>
-    </form>
+    <div class="form-container">
+        <h1>Новое объявление</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Опубликовать</button>
+        </form>
+        <a href="{% url 'listing_list' %}" class="back-link">← Вернуться на главную</a>
+    </div>
 </body>
 </html>

@@ -4,5 +4,6 @@ from listings import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.listing_list, name='listing_list'), # Главная страница
+    path('', views.listing_list, name='listing_list'),
+    path('add/', views.add_listing, name='add_listing'),
 ]

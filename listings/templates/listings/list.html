@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Кампусная доска «Потерял/Нашёл»</h1>
+    <p><a href="{% url 'add_listing' %}" style="padding: 10px; background: green; color: white; text-decoration: none; border-radius: 5px;">Добавить объявление</a></p>
     <hr>
     
     {% for item in listings %}

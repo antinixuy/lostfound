@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>LostFound - Доска объявлений</title>
+</head>
+<body>
+    <h1>Кампусная доска «Потерял/Нашёл»</h1>
+    <hr>
+    
+    {% for item in listings %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+            <h2>{{ item.title }}</h2>
+            <p><strong>Тип:</strong> {{ item.get_type_display }}</p>
+            <p><strong>Статус:</strong> {{ item.get_status_display }}</p>
+            <p>{{ item.description }}</p>
+            <p><small>Автор: {{ item.user.username }} | Дата: {{ item.created_at }}</small></p>
+        </div>
+    {% empty %}
+        <p>Пока нет ни одного объявления. Добавьте их через <a href="/admin/">админку</a>!</p>
+    {% endfor %}
+
+</body>
+</html>
